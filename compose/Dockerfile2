@@ -1,0 +1,12 @@
+FROM debian:stretch
+
+RUN apt-get update
+RUN apt-get install -y curl \
+                nodejs \
+                python-pip \
+                libssl-dev \
+                libsasl2-dev
+COPY . /superset
+RUN pip install -r superset/requirements.txt
+
+RUN python superset/setup.py install

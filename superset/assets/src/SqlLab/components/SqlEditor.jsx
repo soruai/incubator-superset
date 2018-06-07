@@ -1,3 +1,4 @@
+import shortid from 'shortid';
 import React from 'react';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
@@ -26,6 +27,7 @@ import SqlEditorLeftBar from './SqlEditorLeftBar';
 import AceEditorWrapper from './AceEditorWrapper';
 import { STATE_BSSTYLE_MAP } from '../constants';
 import RunQueryActionButton from './RunQueryActionButton';
+import SendQueryActionButton from './SendQueryActionButton';
 import { t } from '../../locales';
 
 
@@ -59,6 +61,7 @@ class SqlEditor extends React.PureComponent {
     this.onResize = this.onResize.bind(this);
     this.throttledResize = throttle(this.onResize, 250);
     this.runQuery = this.runQuery.bind(this);
+    this.sendQuery = this.sendQuery.bind(this);
     this.stopQuery = this.stopQuery.bind(this);
     this.onSqlChanged = this.onSqlChanged.bind(this);
     this.setQueryEditorSql = this.setQueryEditorSql.bind(this);
@@ -124,6 +127,68 @@ class SqlEditor extends React.PureComponent {
   }
   setQueryEditorSql(sql) {
     this.props.actions.queryEditorSetSql(this.props.queryEditor, sql);
+  }
+  sendQuery(runAsync = false, ctas = false) {
+    const qe = this.props.queryEditor;
+    const query = {
+      dbId: qe.dbId,
+      sql: qe.selectedText ? qe.selectedText : this.state.sql,
+      sqlEditorId: qe.id,
+      tab: qe.title,
+      schema: qe.schema,
+      tempTableName: ctas ? this.state.ctas : '',
+      templateParams: qe.templateParams,
+      runAsync,
+      ctas, 
+    };
+    const sqlJsonRequest = {
+      client_id: shortid.generate(),
+      database_id: query.dbId,
+      json: true,
+      runAsync: query.runAsync,
+      schema: query.schema,
+      sql: query.sql,
+      sql_editor_id: query.sqlEditorId,
+      tab: query.tab,
+      tmp_table_name: query.tempTableName,
+      select_as_cta: query.ctas,
+      templateParams: query.templateParams,
+    };
+
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: 'http://soru.lvh.me/fulfillment/transfersupersetquery',
+      data: sqlJsonRequest,
+      success(results) {
+        console.log('Great');
+        // if (!query.runAsync) {
+        //   dispatch(querySuccess(query, results));
+        // }
+      },
+      error(err, textStatus, errorThrown) {
+        let msg;
+        try {
+          msg = err.responseJSON.error;
+        } catch (e) {
+          if (err.responseText !== undefined) {
+            msg = err.responseText;
+          }
+        }
+        if (msg === null) {
+          if (errorThrown) {
+            msg = `[${textStatus}] ${errorThrown}`;
+          } else {
+            msg = t('Unknown error');
+          }
+        }
+        if (msg.indexOf('CSRF token') > 0) {
+          msg = COMMON_ERR_MESSAGES.SESSION_TIMED_OUT;
+        }
+        // dispatch(queryFailed(query, msg));
+      },
+    });
+    // this.startQuery(!this.props.database.allow_run_sync);
   }
   runQuery() {
     this.startQuery(!this.props.database.allow_run_sync);
@@ -230,6 +295,17 @@ class SqlEditor extends React.PureComponent {
             </span>
             <span className="m-r-5">
               <ShareQuery queryEditor={qe} />
+            </span>
+            <span className="m-r-5">
+              <SendQueryActionButton
+                // allowAsync={this.props.database ? this.props.database.allow_run_async : false}
+                dbId={qe.dbId}
+                // queryState={this.props.latestQuery && this.props.latestQuery.state}
+                sendQuery={this.sendQuery}
+                selectedText={qe.selectedText}
+                // stopQuery={this.stopQuery}
+                sql={this.state.sql}
+              />
             </span>
             {ctasControls}
             <span className="m-l-5">
