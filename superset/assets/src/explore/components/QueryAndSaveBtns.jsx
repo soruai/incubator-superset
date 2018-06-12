@@ -22,7 +22,7 @@ const defaultProps = {
 };
 
 export default function QueryAndSaveBtns(
-  { canAdd, onQuery, onSave, onStop, loading, chartIsStale, errorMessage }) {
+  { canAdd, onQuery, onSave, onStop, loading, chartIsStale, errorMessage, onSend }) {
   const saveClasses = classnames({
     'disabled disabledButton': canAdd !== 'True',
   });
@@ -65,6 +65,14 @@ export default function QueryAndSaveBtns(
           onClick={onSave}
         >
           <i className="fa fa-plus-circle" /> Save
+        </Button>
+        <Button
+          className="query"
+          onClick={onSend}
+          bsStyle={qryButtonStyle}
+          disabled={!!errorMessage}
+        >
+          <i className="fa fa-paper-plane" /> Send Chart
         </Button>
       </ButtonGroup>
       {errorMessage &&

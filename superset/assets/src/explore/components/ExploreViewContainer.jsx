@@ -126,6 +126,45 @@ class ExploreViewContainer extends React.Component {
     return this.props.chart.queryRequest.abort();
   }
 
+  onSend() {
+
+    const sqlJsonRequest = {
+      DatasourceName: this.props.datasource.name,
+      FormData: this.props.form_data,      
+    };
+
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: 'http://soru.lvh.me/fulfillment/transfersupersetchart',
+      data: JSON.stringify(sqlJsonRequest),
+      contentType: "application/json; charset=utf-8",
+      success(results) {
+        console.log('Great');
+      },
+      error(err, textStatus, errorThrown) {
+        let msg;
+        try {
+          msg = err.responseJSON.error;
+        } catch (e) {
+          if (err.responseText !== undefined) {
+            msg = err.responseText;
+          }
+        }
+        if (msg === null) {
+          if (errorThrown) {
+            msg = `[${textStatus}] ${errorThrown}`;
+          } else {
+            msg = t('Unknown error');
+          }
+        }
+        if (msg.indexOf('CSRF token') > 0) {
+          msg = COMMON_ERR_MESSAGES.SESSION_TIMED_OUT;
+        }
+      },
+    });
+  }
+
   getWidth() {
     return `${window.innerWidth}px`;
   }
@@ -274,6 +313,7 @@ class ExploreViewContainer extends React.Component {
               onQuery={this.onQuery.bind(this)}
               onSave={this.toggleModal.bind(this)}
               onStop={this.onStop.bind(this)}
+              onSend={this.onSend.bind(this)}
               loading={this.props.chart.chartStatus === 'loading'}
               chartIsStale={this.state.chartIsStale}
               errorMessage={this.renderErrorMessage()}
