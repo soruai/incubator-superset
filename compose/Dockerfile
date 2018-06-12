@@ -60,6 +60,7 @@ VOLUME /home/superset \
 WORKDIR /home/superset
 
 COPY ./superset /usr/local/lib/python2.7/dist-packages/superset
+RUN chown -R superset /usr/local/lib
 
 # Deploy application
 EXPOSE 8088
