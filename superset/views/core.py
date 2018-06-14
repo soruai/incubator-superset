@@ -2473,6 +2473,10 @@ class Superset(BaseSupersetView):
             return json_error_response('{}'.format(e))
         if data.get('status') == QueryStatus.FAILED:
             return json_error_response(payload=data)
+        # SORU Modifications
+        tab_id = data['query']['tab']
+        superset_id = re.search('<@(.+?)>', tab_id).group(1)
+        cache.set(superset_id, payload, timeout=300)
         return json_success(payload)
 
     @has_access
