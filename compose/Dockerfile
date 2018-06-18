@@ -1,7 +1,7 @@
 FROM debian:stretch
 
 # Superset version
-ARG SUPERSET_VERSION=0.25.5
+ARG SUPERSET_VERSION=0.25.6
 
 # Configure environment
 ENV LANG=C.UTF-8 \
@@ -53,12 +53,12 @@ RUN useradd -U -m superset && \
         superset==${SUPERSET_VERSION}
 
 # Configure Filesystem
-# COPY superset-init /usr/local/bin
 VOLUME /home/superset \
        /etc/superset \
        /var/lib/superset
 WORKDIR /home/superset
 
+COPY ./superset_config.py /etc/superset/superset_config.py
 COPY ./superset /usr/local/lib/python2.7/dist-packages/superset
 RUN chown -R superset /usr/local/lib
 
