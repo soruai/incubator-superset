@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 import re
+import redis
 import time
 import traceback
 from urllib import parse
@@ -2473,6 +2474,12 @@ class Superset(BaseSupersetView):
             return json_error_response('{}'.format(e))
         if data.get('status') == QueryStatus.FAILED:
             return json_error_response(payload=data)
+        # SORU Modifications
+        tab_id = data['query']['tab']
+        superset_id = re.search('<@(.+?)>', tab_id).group(1)
+        redis_conn = redis.StrictRedis.from_url('redis://redis:6379/0')
+        key = 'superset_{}'.format(superset_id)
+        redis_conn.set(key, payload, 300)
         return json_success(payload)
 
     @has_access
