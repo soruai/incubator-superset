@@ -155,10 +155,14 @@ class SqlEditor extends React.PureComponent {
       templateParams: query.templateParams,
     };
 
+    const appContainer = document.getElementById('app');
+    const bootstrapData = JSON.parse(appContainer.getAttribute('data-bootstrap'));
+    var soruDomain = bootstrapData.common.soru_domain;
+
     $.ajax({
       type: 'POST',
       dataType: 'json',
-      url: 'http://soru.lvh.me/fulfillment/transfersupersetquery/',
+      url: `${soruDomain}/fulfillment/transfersupersetquery/`,
       data: sqlJsonRequest,
       success(results) {
         console.log('Great');
