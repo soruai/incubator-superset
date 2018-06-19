@@ -130,13 +130,13 @@ class ExploreViewContainer extends React.Component {
 
     const sqlJsonRequest = {
       DatasourceName: this.props.datasource.name,
-      FormData: this.props.form_data,      
+      FormData: this.props.form_data,
     };
 
     $.ajax({
       type: 'POST',
       dataType: 'json',
-      url: 'http://soru.lvh.me/fulfillment/transfersupersetchart',
+      url: 'http://soru.lvh.me/fulfillment/transfersupersetchart/',
       data: JSON.stringify(sqlJsonRequest),
       contentType: "application/json; charset=utf-8",
       success(results) {

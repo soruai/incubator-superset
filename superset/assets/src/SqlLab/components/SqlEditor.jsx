@@ -139,7 +139,7 @@ class SqlEditor extends React.PureComponent {
       tempTableName: ctas ? this.state.ctas : '',
       templateParams: qe.templateParams,
       runAsync,
-      ctas, 
+      ctas,
     };
     const sqlJsonRequest = {
       client_id: shortid.generate(),
@@ -158,10 +158,11 @@ class SqlEditor extends React.PureComponent {
     $.ajax({
       type: 'POST',
       dataType: 'json',
-      url: 'http://soru.lvh.me/fulfillment/transfersupersetquery',
+      url: 'http://soru.lvh.me/fulfillment/transfersupersetquery/',
       data: sqlJsonRequest,
       success(results) {
         console.log('Great');
+        // TODO(gun): Redirect or notify the user here.
         // if (!query.runAsync) {
         //   dispatch(querySuccess(query, results));
         // }
