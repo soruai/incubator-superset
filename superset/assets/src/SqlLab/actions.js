@@ -369,7 +369,7 @@ export function popStoredQuery(urlId) {
   return function (dispatch) {
     $.ajax({
       type: 'GET',
-      url: `/kv/${urlId}`,
+      url: `/kv/${urlId}/`,
       success: (data) => {
         const newQuery = JSON.parse(data);
         const queryEditorProps = {
