@@ -133,10 +133,14 @@ class ExploreViewContainer extends React.Component {
       FormData: this.props.form_data,      
     };
 
+    const appContainer = document.getElementById('app');
+    const bootstrapData = JSON.parse(appContainer.getAttribute('data-bootstrap'));
+    var soruDomain = bootstrapData.common.soru_domain;
+
     $.ajax({
       type: 'POST',
       dataType: 'json',
-      url: 'http://soru.lvh.me/fulfillment/transfersupersetchart',
+      url: soruDomain + '/fulfillment/transfersupersetchart',
       data: JSON.stringify(sqlJsonRequest),
       contentType: "application/json; charset=utf-8",
       success(results) {
