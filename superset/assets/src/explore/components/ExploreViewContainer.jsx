@@ -140,7 +140,7 @@ class ExploreViewContainer extends React.Component {
     $.ajax({
       type: 'POST',
       dataType: 'json',
-      url: `${soruDomain}/fulfillment/transfersupersetchart/`,
+      url: `${soruDomain}/fulfillment/transfersupersetchart`,
       data: JSON.stringify(sqlJsonRequest),
       contentType: "application/json; charset=utf-8",
       success(results) {

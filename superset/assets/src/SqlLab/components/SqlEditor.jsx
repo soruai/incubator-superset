@@ -162,7 +162,7 @@ class SqlEditor extends React.PureComponent {
     $.ajax({
       type: 'POST',
       dataType: 'json',
-      url: `${soruDomain}/fulfillment/transfersupersetquery/`,
+      url: `${soruDomain}/fulfillment/transfersupersetquery`,
       data: sqlJsonRequest,
       success(results) {
         console.log('Great');
