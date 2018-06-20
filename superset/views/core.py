@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 import re
+import requests
 import redis
 import time
 import traceback
@@ -35,8 +36,8 @@ from werkzeug.routing import BaseConverter
 from werkzeug.utils import secure_filename
 
 from superset import (
-    app, appbuilder, cache, db, results_backend, security_manager, sql_lab, utils,
-    viz,
+    app, appbuilder, cache, conf, db, results_backend, security_manager,
+    sql_lab, utils, viz,
 )
 from superset.connectors.connector_registry import ConnectorRegistry
 from superset.connectors.sqla.models import AnnotationDatasource, SqlaTable
@@ -2206,6 +2207,29 @@ class Superset(BaseSupersetView):
         table.columns = cols
         table.metrics = metrics
         db.session.commit()
+
+        # SORU MODIFICATIONS
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        query_data = {
+            'datasourceName': table.perm
+        }
+        response = requests.post(
+            'http://django:5000/fulfillment/queryteamname',
+            data=json.dumps(query_data),
+            headers=headers)
+        response_dictionary = response.json()
+        view_menu = security_manager.find_view_menu(table.perm)
+        role = security_manager.find_role('{}_Role'.format(
+            response_dictionary['teamName']))
+        permission_view = security_manager.find_permission_view_menu(
+            'datasource_access', view_menu.name)
+        if permission_view is None:
+            permission_view = security_manager.add_permission_view_menu(
+                'datasource_access', view_menu.name)
+        security_manager.add_permission_role(role, permission_view)
+
         return self.json_response(json.dumps({
             'table_id': table.id,
         }))
