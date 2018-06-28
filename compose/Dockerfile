@@ -43,14 +43,17 @@ RUN useradd -U -m superset && \
         mysqlclient==1.3.7 \
         psycopg2==2.6.1 \
         pyathenajdbc==1.2.0 \
+        pybigquery==0.3.1 \
         pyhive==0.5.0 \
         pyldap==2.4.28 \
         redis==2.10.5 \
-        sqlalchemy-redshift==0.5.0 \
-        sqlalchemy-clickhouse==0.1.1.post3 \
-        sqlalchemy-utils==0.32.21 \
+        sqlalchemy-redshift==0.7.1 \
+        sqlalchemy-clickhouse==0.1.1.post3 \        
         Werkzeug==0.12.1 \
         superset==${SUPERSET_VERSION}
+
+RUN pip install --upgrade setuptools
+RUN pip install --upgrade idna
 
 # Configure Filesystem
 VOLUME /home/superset \
