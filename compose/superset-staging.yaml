@@ -1,13 +1,11 @@
 steps:
-  # - name: 'gcr.io/cloud-builders/yarn'
-  #   args: ['install']
-  #   dir: 'superset/assets'
-  # - name: 'gcr.io/cloud-builders/yarn'
-  #   args: ['build']
-  #   dir: 'superset/assets'  
-  - name: 'ubuntu'
-    args: ['ls']    
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['install']
+    dir: 'superset/assets'
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['build']
+    dir: 'superset/assets'  
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-f', 'compose/Dockerfile', '-t', 'us.gcr.io/$PROJECT_ID/soru-staging:superset', '.']    
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['push', 'us.gcr.io/$PROJECT_ID/soru-staging:superset']  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us.gcr.io/$PROJECT_ID/soru-staging:superset']  
