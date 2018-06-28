@@ -1,0 +1,7 @@
+steps:
+  - name: 'gcr.io/cloud-builders/yarn'
+  args: ['install']
+  dir: 'superset/assets'
+  # - name: 'gcr.io/cloud-builders/docker'
+  # args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/soru-staging:cron-staging-$COMMIT_SHA', '.']
+  # dir: 'compose/'
