@@ -4,8 +4,9 @@ steps:
     dir: 'superset/assets'
   - name: 'gcr.io/cloud-builders/yarn'
     args: ['build']
-    dir: 'superset/assets'  
+    dir: 'superset/assets'
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'compose/Dockerfile', '-t', 'us.gcr.io/$PROJECT_ID/soru-staging:superset', '.']    
+    args: ['build', '-f', 'compose/Dockerfile', '-t', 'us.gcr.io/$PROJECT_ID/soru-staging:superset', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us.gcr.io/$PROJECT_ID/soru-staging:superset']  
+    args: ['push', 'us.gcr.io/$PROJECT_ID/soru-staging:superset']
+timeout: 2000s
