@@ -8,7 +8,7 @@ steps:
   - name: 'ubuntu'
     args: ['ls']    
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/soru-staging:superset', '.']
+    args: ['build', '-t', 'us.gcr.io/$PROJECT_ID/soru-staging:superset']
     dir: 'compose/'
   # - name: 'gcr.io/cloud-builders/docker'
   #   args: ['push', 'us.gcr.io/$PROJECT_ID/soru-staging:superset']  
