@@ -1,3 +1,3 @@
 FROM debian:stretch
 
-COPY superset_config.py /
+COPY supersetXX_config.py /
