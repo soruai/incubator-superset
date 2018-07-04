@@ -2503,10 +2503,13 @@ class Superset(BaseSupersetView):
             return json_error_response(payload=data)
         # SORU Modifications
         tab_id = data['query']['tab']
-        superset_id = re.search('<@(.+?)>', tab_id).group(1)
-        redis_conn = redis.StrictRedis.from_url('redis://redis:6379/0')
-        key = 'superset_{}'.format(superset_id)
-        redis_conn.set(key, payload, 300)
+        if tab_id:
+            superset_expression = re.search('<@(.+?)>', tab_id)
+            if superset_expression.groups():
+                superset_id = superset_expression.group(1)
+                redis_conn = redis.StrictRedis.from_url('redis://redis:6379/0')
+                key = 'superset_{}'.format(superset_id)
+                redis_conn.set(key, payload, 300)
         return json_success(payload)
 
     @has_access
