@@ -9,4 +9,13 @@ steps:
     args: ['build', '-f', 'compose/Dockerfile', '-t', 'us.gcr.io/$PROJECT_ID/superset-staging:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us.gcr.io/$PROJECT_ID/superset-staging:latest']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+    - 'set'
+    - 'image'
+    - 'deployment/superset-staging'
+    - 'superset=us.gcr.io/$PROJECT_ID/superset-staging:latest'
+    env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=soru-staging'
 timeout: 2000s

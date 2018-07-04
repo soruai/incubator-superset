@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: superset-staging
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -73,7 +73,7 @@ spec:
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: ingestion-secret-key
+                name: ingestion-secret-key-staging
                 key: key
           - name: SORU_EXTERNAL_HOST
             value: https://staging.soru.ai
@@ -105,7 +105,7 @@ spec:
           - name: PUBSUB_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: ingestion-secret-key
+                name: ingestion-secret-key-staging
                 key: key
           - name: SESSION_DOMAIN
             value: "staging.soru.ai"
