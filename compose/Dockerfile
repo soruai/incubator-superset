@@ -61,7 +61,7 @@ VOLUME /home/superset \
        /var/lib/superset
 WORKDIR /home/superset
 
-# COPY ./superset_config.py /etc/superset/superset_config.py
+COPY ./superset_config.py /etc/superset/superset_config.py
 COPY ./superset /usr/local/lib/python2.7/dist-packages/superset
 RUN chown -R superset /usr/local/lib/python2.7/dist-packages/superset
 
