@@ -2507,7 +2507,8 @@ class Superset(BaseSupersetView):
             superset_expression = re.search('<@(.+?)>', tab_id)
             if superset_expression.groups():
                 superset_id = superset_expression.group(1)
-                redis_conn = redis.StrictRedis.from_url('redis://redis:6379/0')
+                redis_url = config.get('REDIS_URL')
+                redis_conn = redis.StrictRedis.from_url(redis_url)
                 key = 'superset_{}'.format(superset_id)
                 redis_conn.set(key, payload, 300)
         return json_success(payload)
