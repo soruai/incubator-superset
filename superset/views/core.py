@@ -2505,7 +2505,7 @@ class Superset(BaseSupersetView):
             return json_error_response('{}'.format(e))
         if data.get('status') == QueryStatus.FAILED:
             return json_error_response(payload=data)
-        # SORU Modifications
+        ######################### SORU MODIFICATIONS ##########################
         tab_id = data['query']['tab']
         if tab_id:
             superset_expression = re.search('<@(.+?)>', tab_id)
@@ -2515,6 +2515,7 @@ class Superset(BaseSupersetView):
                 redis_conn = redis.StrictRedis.from_url(redis_url)
                 key = 'superset_{}'.format(superset_id)
                 redis_conn.set(key, payload, 300)
+        ######################### SORU MODIFICATIONS ##########################
         return json_success(payload)
 
     @has_access
