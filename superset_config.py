@@ -168,8 +168,6 @@ class SoruAuthRemoteUserView(AuthRemoteUserView):
                 role=role)
             user = sm.auth_user_remote_user(username)
 
-        self.add_role_if_missing(sm, user.id, 'sql_lab')
-
         login_user(user)
         return redirect(self.get_redirect())
 
