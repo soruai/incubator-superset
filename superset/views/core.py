@@ -2209,7 +2209,7 @@ class Superset(BaseSupersetView):
         db.session.commit()
 
         ######################### SORU MODIFICATIONS ##########################
-        soru_internal_host = config.get('SORU_INTERNAL_HOST')
+        soru_internal_host = app.config.get('SORU_INTERNAL_HOST')
         if soru_internal_host:
             headers = {
                 'Content-Type': 'application/json'
@@ -2231,6 +2231,10 @@ class Superset(BaseSupersetView):
                 permission_view = security_manager.add_permission_view_menu(
                     'datasource_access', view_menu.name)
             security_manager.add_permission_role(role, permission_view)
+            logging.info('Permission {} is added to Role'.format(
+                permission_view, role))
+        else:
+            logging.warn('SORU_INTERNAL_HOST not found.')
         ###################### End of SORU modifications ######################
 
         return self.json_response(json.dumps({
