@@ -2218,13 +2218,13 @@ class Superset(BaseSupersetView):
                 'datasourceName': table.perm
             }
             response = requests.post(
-                '{}/fulfillment/queryteamname'.format(soru_internal_host),
+                '{}/fulfillment/queryteamid'.format(soru_internal_host),
                 data=json.dumps(query_data),
                 headers=headers)
             response_dictionary = response.json()
             view_menu = security_manager.find_view_menu(table.perm)
             role = security_manager.find_role('{}_Role'.format(
-                response_dictionary['teamName']))
+                response_dictionary['teamId']))
             permission_view = security_manager.find_permission_view_menu(
                 'datasource_access', view_menu.name)
             if permission_view is None:
