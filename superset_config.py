@@ -49,7 +49,7 @@ DEFAULT_USER_ROLE = 'Gamma'
 SORU_DATABASE_URL = os.getenv('SORU_DATABASE_URL')
 # Used inside Soru's custom superset instance.
 SORU_EXTERNAL_HOST = os.getenv('SORU_EXTERNAL_HOST')
-SORU_INTERNAL_HOST = os.getenv('SORU_INTERNAL_HOST')
+SORU_API_HOST = os.getenv('SORU_API_HOST')
 # TODO(ertan): Make allowed origin work for both http and https. Right now it
 # only works with SORU_EXTERNAL_HOST.
 HTTP_HEADERS = {
