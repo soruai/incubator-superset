@@ -2209,8 +2209,8 @@ class Superset(BaseSupersetView):
         db.session.commit()
 
         ######################### SORU MODIFICATIONS ##########################
-        soru_internal_host = app.config.get('SORU_INTERNAL_HOST')
-        if soru_internal_host:
+        soru_api_host = app.config.get('SORU_API_HOST')
+        if soru_api_host:
             headers = {
                 'Content-Type': 'application/json'
             }
@@ -2218,7 +2218,7 @@ class Superset(BaseSupersetView):
                 'datasourceName': table.perm
             }
             response = requests.post(
-                '{}/fulfillment/queryteamid'.format(soru_internal_host),
+                '{}/fulfillment/queryteamid'.format(soru_api_host),
                 data=json.dumps(query_data),
                 headers=headers)
             response_dictionary = response.json()
@@ -2234,7 +2234,7 @@ class Superset(BaseSupersetView):
             logging.info('Permission {} is added to Role'.format(
                 permission_view, role))
         else:
-            logging.warn('SORU_INTERNAL_HOST not found.')
+            logging.warn('SORU_API_HOST not found.')
         ###################### End of SORU modifications ######################
 
         return self.json_response(json.dumps({
