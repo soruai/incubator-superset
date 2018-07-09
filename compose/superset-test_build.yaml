@@ -1,0 +1,6 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'compose/Dockerfile-test', '-t', 'superset-test', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '-w', '/app/', 'superset-test', 'tox', '-e', 'py27']
+timeout: 2000s
