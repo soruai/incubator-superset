@@ -103,31 +103,43 @@ def is_request_from_trusted_source():
 def login_admin(user_model):
     session = Session()
     # TODO(ertan): Do this properly, filter_by.first might cause issues.
-    user = session.query(user_model).options(
-        joinedload('roles').subqueryload('permissions')).filter_by(
-        username=ADMIN_USERNAME).first()
-    login_user(user)
-    request.environ['REMOTE_USER'] = ADMIN_USERNAME
+    try:
+        user = session.query(user_model).options(
+            joinedload('roles').subqueryload('permissions')).filter_by(
+            username=ADMIN_USERNAME).first()
+        login_user(user)
+        request.environ['REMOTE_USER'] = ADMIN_USERNAME
+        session.commit()
+    except Exception:
+        session.rollback()
 
 
 def get_superset_user(user_id, user_model):
+    soru_session = SoruSession()
     try:
-        soru_session = SoruSession()
         result = soru_session.execute(
             text('SELECT username FROM users_user WHERE id = :id'),
             {'id': str(user_id)}
         ).first()
         username = result[0]
+        soru_session.commit()
     except KeyError as e:
         logger.exception(e)
         return 'User not found.'
     except Exception as e:
+        soru_session.rollback()
         logger.exception(e)
         return 'Something went wrong.'
+
     session = Session()
-    user = session.query(user_model).options(
-        joinedload('roles').subqueryload('permissions')).filter_by(
-        username=username).first()
+    try:
+        user = session.query(user_model).options(
+            joinedload('roles').subqueryload('permissions')).filter_by(
+            username=username).first()
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
     return user, username
 
 
@@ -135,12 +147,15 @@ class SoruAuthRemoteUserView(AuthRemoteUserView):
     def add_role_if_missing(self, sm, user_id, role_name):
         found_role = sm.find_role(role_name)
         session = sm.get_session
-        user = session.query(sm.user_model).options(
-            joinedload('roles').subqueryload('permissions')).get(
-            user_id)
-        if found_role and found_role not in user.roles:
-            user.roles += [found_role]
+        try:
+            user = session.query(sm.user_model).options(
+                joinedload('roles').subqueryload('permissions')).get(
+                user_id)
+            if found_role and found_role not in user.roles:
+                user.roles += [found_role]
             session.commit()
+        except Exception:
+            session.rollback()
 
     @expose('/login/')
     def login(self):
