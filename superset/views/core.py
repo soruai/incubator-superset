@@ -2217,22 +2217,30 @@ class Superset(BaseSupersetView):
             query_data = {
                 'datasourceName': table.perm
             }
-            response = requests.post(
-                '{}/fulfillment/queryteamname'.format(soru_api_host),
-                data=json.dumps(query_data),
-                headers=headers)
-            response_dictionary = response.json()
-            view_menu = security_manager.find_view_menu(table.perm)
-            role = security_manager.find_role('{}_Role'.format(
-                response_dictionary['teamName']))
-            permission_view = security_manager.find_permission_view_menu(
-                'datasource_access', view_menu.name)
-            if permission_view is None:
-                permission_view = security_manager.add_permission_view_menu(
+            try:
+                response = requests.post(
+                    '{}/fulfillment/queryteamname'.format(soru_api_host),
+                    data=json.dumps(query_data),
+                    headers=headers)
+                response_dictionary = response.json()
+                view_menu = security_manager.find_view_menu(table.perm)
+                role = security_manager.find_role('{}_Role'.format(
+                    response_dictionary['teamName']))
+                permission_view = security_manager.find_permission_view_menu(
                     'datasource_access', view_menu.name)
-            security_manager.add_permission_role(role, permission_view)
-            logging.info('Permission {} is added to Role'.format(
-                permission_view, role))
+                if permission_view is None:
+                    permission_view = \
+                        security_manager.add_permission_view_menu(
+                            'datasource_access', view_menu.name)
+                security_manager.add_permission_role(role, permission_view)
+                logging.info('Permission {} is added to Role'.format(
+                    permission_view, role))
+            except Exception as e:
+                # The superset code should function normally even though Soru
+                # specific parts fail. We will log and monitor these on our
+                # side.
+                logging.exception(e)
+                pass
         else:
             logging.warn('SORU_API_HOST not found.')
         ###################### End of SORU modifications ######################
