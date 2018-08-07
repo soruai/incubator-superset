@@ -48,7 +48,7 @@ RUN useradd -U -m superset && \
         pyldap==2.4.28 \
         redis==2.10.5 \
         sqlalchemy-redshift==0.7.1 \
-        sqlalchemy-clickhouse==0.1.1.post3 \        
+        sqlalchemy-clickhouse==0.1.1.post3 \
         Werkzeug==0.12.1 \
         superset==${SUPERSET_VERSION}
 
@@ -69,5 +69,5 @@ RUN chown -R superset /usr/local/lib/python2.7/dist-packages/superset
 EXPOSE 8088
 HEALTHCHECK CMD ["curl", "-f", "http://localhost:8088/health"]
 ENTRYPOINT ["superset"]
-CMD ["runserver"]
+CMD ["runserver", "-t", "300"]
 USER superset
