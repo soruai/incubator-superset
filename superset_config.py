@@ -123,13 +123,9 @@ def get_superset_user(user_id, user_model):
         ).first()
         username = result[0]
         soru_session.commit()
-    except KeyError as e:
-        logger.exception(e)
-        return 'User not found.'
-    except Exception as e:
+    except Exception:
         soru_session.rollback()
-        logger.exception(e)
-        return 'Something went wrong.'
+        raise
 
     session = Session()
     try:
