@@ -2517,7 +2517,7 @@ class Superset(BaseSupersetView):
         tab_id = data['query']['tab']
         if tab_id:
             superset_expression = re.search('<@(.+?)>', tab_id)
-            if superset_expression.groups():
+            if superset_expression and superset_expression.groups():
                 superset_id = superset_expression.group(1)
                 redis_url = config.get('REDIS_URL')
                 redis_conn = redis.StrictRedis.from_url(redis_url)
